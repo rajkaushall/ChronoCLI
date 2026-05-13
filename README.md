@@ -12,3 +12,14 @@ Current phase:
 
 ```text
 Phase 0: Project foundation and planning
+
+## How to Build and Run
+
+### Using CMake
+
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
+./chronocli
