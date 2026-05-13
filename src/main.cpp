@@ -1,4 +1,5 @@
 #include "Calendar.hpp"
+#include "DateUtils.hpp"
 #include "InputUtils.hpp"
 
 #include <iostream>
@@ -21,7 +22,22 @@ void displayMainMenu() {
     std::cout << "2. Display yearly calendar\n";
     std::cout << "3. Check leap year\n";
     std::cout << "4. Find first weekday of a month\n";
+    std::cout << "5. Find weekday of any date\n";
+    std::cout << "6. Compare two dates\n";
+    std::cout << "7. Calculate difference between two dates\n";
     std::cout << "0. Exit\n";
+}
+
+chronocli::Date readDateFromUser(const std::string& label) {
+    std::cout << "\n" << label << "\n";
+
+    chronocli::Date date;
+
+    date.day = chronocli::readIntegerInRange("Enter day (1-31): ", 1, 31);
+    date.month = chronocli::readIntegerInRange("Enter month (1-12): ", 1, 12);
+    date.year = chronocli::readIntegerInRange("Enter year (1-9999): ", 1, 9999);
+
+    return date;
 }
 
 void handleMonthlyCalendar(const chronocli::Calendar& calendar) {
@@ -62,17 +78,55 @@ void handleFirstWeekday(const chronocli::Calendar& calendar) {
               << ".\n";
 }
 
+void handleDateValidationAndWeekday(const chronocli::DateUtils& dateUtils) {
+    chronocli::Date date = readDateFromUser("Enter date details:");
+
+    if (!dateUtils.isValidDate(date)) {
+        std::cout << "Invalid date.\n";
+        return;
+    }
+
+    std::cout << "The date is valid.\n";
+    std::cout << "Weekday: " << dateUtils.getDayOfWeekName(date) << '\n';
+}
+
+void handleDateComparison(const chronocli::DateUtils& dateUtils) {
+    chronocli::Date firstDate = readDateFromUser("Enter first date:");
+    chronocli::Date secondDate = readDateFromUser("Enter second date:");
+
+    int result = dateUtils.compareDates(firstDate, secondDate);
+
+    if (result < 0) {
+        std::cout << "First date is earlier than second date.\n";
+    } else if (result > 0) {
+        std::cout << "First date is later than second date.\n";
+    } else {
+        std::cout << "Both dates are the same.\n";
+    }
+}
+
+void handleDateDifference(const chronocli::DateUtils& dateUtils) {
+    chronocli::Date firstDate = readDateFromUser("Enter first date:");
+    chronocli::Date secondDate = readDateFromUser("Enter second date:");
+
+    long long difference = dateUtils.getDifferenceInDays(firstDate, secondDate);
+
+    std::cout << "Difference: " << difference << " day(s).\n";
+}
+
 } // anonymous namespace
 
 int main() {
     chronocli::Calendar calendar;
+    chronocli::DateUtils dateUtils;
+
     bool isRunning = true;
 
     while (isRunning) {
         displayHeader();
         displayMainMenu();
 
-        int choice = chronocli::readIntegerInRange("\nEnter your choice: ", 0, 4);
+        int choice = chronocli::readIntegerInRange("\nEnter your choice: ", 0, 7);
 
         try {
             switch (choice) {
@@ -93,6 +147,21 @@ int main() {
 
                 case 4:
                     handleFirstWeekday(calendar);
+                    chronocli::waitForEnter();
+                    break;
+
+                case 5:
+                    handleDateValidationAndWeekday(dateUtils);
+                    chronocli::waitForEnter();
+                    break;
+
+                case 6:
+                    handleDateComparison(dateUtils);
+                    chronocli::waitForEnter();
+                    break;
+
+                case 7:
+                    handleDateDifference(dateUtils);
                     chronocli::waitForEnter();
                     break;
 
