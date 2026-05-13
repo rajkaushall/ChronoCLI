@@ -6,7 +6,8 @@ This project is being built as a portfolio-level C++ project with clean code, mo
 
 ## Current Status
 
-Project is under active development.
+```text
+Phase 3: Better CLI menu and reusable input handling
 
 ## Current Features
 
@@ -14,10 +15,31 @@ Project is under active development.
 - Display yearly calendar
 - Leap year detection
 - Find the first weekday of a month
-- Basic input validation
+- Reusable input validation
+- Continuous menu loop
 - Modular C++ structure
 - CMake build support
 
+## Project Structure
+
+```text
+ChronoCLI/
+│
+├── include/
+│   ├── Calendar.hpp
+│   └── InputUtils.hpp
+│
+├── src/
+│   ├── Calendar.cpp
+│   ├── InputUtils.cpp
+│   └── main.cpp
+│
+├── docs/
+│   └── project-plan.md
+│
+├── CMakeLists.txt
+├── README.md
+└── .gitignore
 
 ## How to Build and Run
 

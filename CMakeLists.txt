@@ -13,6 +13,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(chronocli
     src/main.cpp
     src/Calendar.cpp
+    src/InputUtils.cpp
 )
 
 target_include_directories(chronocli PRIVATE include)
