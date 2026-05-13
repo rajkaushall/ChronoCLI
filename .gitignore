@@ -1,6 +1,26 @@
-# Ignore build artifacts
-*.exe
+# Build folders
+build/
+cmake-build-*/
+
+# Compiled object files
 *.o
 *.obj
-*.log
+
+# Executables
+*.exe
 *.out
+*.app
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
