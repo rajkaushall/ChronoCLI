@@ -7,14 +7,22 @@ This project is being built as a portfolio-level C++ project with clean code, mo
 ## Current Status
 
 ```text
-Phase 3: Better CLI menu and reusable input handling
+Phase 4: Date utility features
 
+
+Update current features:
+
+```md
 ## Current Features
 
 - Display monthly calendar
 - Display yearly calendar
 - Leap year detection
 - Find the first weekday of a month
+- Validate any date
+- Find weekday of any date
+- Compare two dates
+- Calculate difference between two dates
 - Reusable input validation
 - Continuous menu loop
 - Modular C++ structure
@@ -27,10 +35,12 @@ ChronoCLI/
 │
 ├── include/
 │   ├── Calendar.hpp
+│   ├── DateUtils.hpp
 │   └── InputUtils.hpp
 │
 ├── src/
 │   ├── Calendar.cpp
+│   ├── DateUtils.cpp
 │   ├── InputUtils.cpp
 │   └── main.cpp
 │
@@ -40,17 +50,3 @@ ChronoCLI/
 ├── CMakeLists.txt
 ├── README.md
 └── .gitignore
-
-## How to Build and Run
-
-### Using CMake
-
-```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
-./chronocli
-
-
-
