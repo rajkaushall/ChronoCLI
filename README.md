@@ -8,10 +8,16 @@ This project is being built as a portfolio-level C++ project with clean code, mo
 
 Project is under active development.
 
-Current phase:
+## Current Features
 
-```text
-Phase 0: Project foundation and planning
+- Display monthly calendar
+- Display yearly calendar
+- Leap year detection
+- Find the first weekday of a month
+- Basic input validation
+- Modular C++ structure
+- CMake build support
+
 
 ## How to Build and Run
 
@@ -23,3 +29,6 @@ cd build
 cmake ..
 cmake --build .
 ./chronocli
+
+
+
