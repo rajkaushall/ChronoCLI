@@ -7,17 +7,29 @@
 
 namespace chronocli {
 
+bool Calendar::isValidYear(int year) const {
+    return year > 0;
+}
+
 bool Calendar::isValidMonth(int month) const {
     return month >= 1 && month <= 12;
 }
 
 bool Calendar::isLeapYear(int year) const {
+    if (!isValidYear(year)) {
+        throw std::invalid_argument("Year must be greater than 0.");
+    }
+
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
 int Calendar::getDaysInMonth(int month, int year) const {
     if (!isValidMonth(month)) {
         throw std::invalid_argument("Month must be between 1 and 12.");
+    }
+
+    if (!isValidYear(year)) {
+        throw std::invalid_argument("Year must be greater than 0.");
     }
 
     if (month == 2) {
@@ -36,6 +48,25 @@ int Calendar::getFirstDayOfMonth(int month, int year) const {
         throw std::invalid_argument("Month must be between 1 and 12.");
     }
 
+    if (!isValidYear(year)) {
+        throw std::invalid_argument("Year must be greater than 0.");
+    }
+
+    /*
+        Zeller's Congruence
+
+        This formula calculates the weekday of a given date.
+
+        For this project:
+        0 = Saturday
+        1 = Sunday
+        2 = Monday
+        3 = Tuesday
+        4 = Wednesday
+        5 = Thursday
+        6 = Friday
+    */
+
     int adjustedMonth = month;
     int adjustedYear = year;
 
@@ -48,7 +79,7 @@ int Calendar::getFirstDayOfMonth(int month, int year) const {
     int yearOfCentury = adjustedYear % 100;
     int zeroBasedCentury = adjustedYear / 100;
 
-    int zellerValue = (
+    int weekday = (
         day
         + (13 * (adjustedMonth + 1)) / 5
         + yearOfCentury
@@ -57,7 +88,7 @@ int Calendar::getFirstDayOfMonth(int month, int year) const {
         + 5 * zeroBasedCentury
     ) % 7;
 
-    return zellerValue;
+    return weekday;
 }
 
 std::string Calendar::getMonthName(int month) const {
@@ -72,6 +103,18 @@ std::string Calendar::getMonthName(int month) const {
     };
 
     return monthNames[month - 1];
+}
+
+std::string Calendar::getWeekdayName(int weekday) const {
+    static const std::array<std::string, 7> weekdayNames = {
+        "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
+    };
+
+    if (weekday < 0 || weekday > 6) {
+        throw std::invalid_argument("Weekday must be between 0 and 6.");
+    }
+
+    return weekdayNames[weekday];
 }
 
 void Calendar::printMonth(int month, int year) const {
@@ -102,6 +145,20 @@ void Calendar::printMonth(int month, int year) const {
     }
 
     std::cout << "\n\n";
+}
+
+void Calendar::printYear(int year) const {
+    if (!isValidYear(year)) {
+        throw std::invalid_argument("Year must be greater than 0.");
+    }
+
+    std::cout << "\n==============================\n";
+    std::cout << "Calendar Year: " << year << '\n';
+    std::cout << "==============================\n";
+
+    for (int month = 1; month <= 12; month++) {
+        printMonth(month, year);
+    }
 }
 
 } // namespace chronocli
