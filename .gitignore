@@ -1,8 +1,8 @@
-# Build folders
+# Build directories
 build/
 cmake-build-*/
 
-# Compiled object files
+# Object files
 *.o
 *.obj
 
