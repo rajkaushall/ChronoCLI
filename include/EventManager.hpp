@@ -29,11 +29,19 @@ public:
 
     bool hasEvents() const;
 
+    bool saveEventsToFile(const std::string& filePath) const;
+    bool loadEventsFromFile(const std::string& filePath);
+
 private:
     std::vector<Event> events;
     int nextEventId;
 
     bool isSameDate(const Date& firstDate, const Date& secondDate) const;
+
+    std::string escapeText(const std::string& text) const;
+    std::string unescapeText(const std::string& text) const;
+    std::vector<std::string> splitEscapedLine(const std::string& line) const;
+    bool parseEventLine(const std::string& line, Event& event) const;
 };
 
 } // namespace chronocli

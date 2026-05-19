@@ -5,9 +5,12 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace {
+
+const std::string EVENT_FILE_PATH = "events.txt";
 
 void displayHeader() {
     chronocli::printLine('=', 45);
@@ -32,6 +35,7 @@ void displayMainMenu() {
     std::cout << "10. View events by month\n";
     std::cout << "11. View all events\n";
     std::cout << "12. Delete event\n";
+    std::cout << "13. Save events now\n";
     std::cout << "0. Exit\n";
 }
 
@@ -208,6 +212,16 @@ void handleDeleteEvent(chronocli::EventManager& eventManager) {
     }
 }
 
+void handleSaveEvents(const chronocli::EventManager& eventManager) {
+    bool saved = eventManager.saveEventsToFile(EVENT_FILE_PATH);
+
+    if (saved) {
+        std::cout << "Events saved successfully to " << EVENT_FILE_PATH << ".\n";
+    } else {
+        std::cout << "Error: Could not save events.\n";
+    }
+}
+
 } // anonymous namespace
 
 int main() {
@@ -215,13 +229,21 @@ int main() {
     chronocli::DateUtils dateUtils;
     chronocli::EventManager eventManager;
 
+    bool loaded = eventManager.loadEventsFromFile(EVENT_FILE_PATH);
+
+    if (loaded) {
+        std::cout << "Saved events loaded from " << EVENT_FILE_PATH << ".\n";
+    } else {
+        std::cout << "No saved event file found. Starting fresh.\n";
+    }
+
     bool isRunning = true;
 
     while (isRunning) {
         displayHeader();
         displayMainMenu();
 
-        int choice = chronocli::readIntegerInRange("\nEnter your choice: ", 0, 12);
+        int choice = chronocli::readIntegerInRange("\nEnter your choice: ", 0, 13);
 
         try {
             switch (choice) {
@@ -285,7 +307,13 @@ int main() {
                     chronocli::waitForEnter();
                     break;
 
+                case 13:
+                    handleSaveEvents(eventManager);
+                    chronocli::waitForEnter();
+                    break;
+
                 case 0:
+                    handleSaveEvents(eventManager);
                     std::cout << "Thank you for using ChronoCLI.\n";
                     isRunning = false;
                     break;

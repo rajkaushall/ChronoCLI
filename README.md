@@ -7,10 +7,11 @@ This project is being built as a portfolio-level C++ project with clean code, mo
 ## Current Status
 
 ```text
-Phase 5: Event management system
+Phase 7: Unit testing
 
 
-Update current features:
+
+Update features:
 
 ```md
 ## Current Features
@@ -28,14 +29,25 @@ Update current features:
 - View events by month
 - View all events
 - Delete events
+- Save events to file
+- Load events from file
+- Auto-save events on exit
 - Reusable input validation
 - Continuous menu loop
 - Modular C++ structure
 - CMake build support
+- Automated unit tests
 
+Update project structure:
+
+```md
 ## Project Structure
 
 ```text
+
+Update project structure:
+
+```md
 ## Project Structure
 
 ```text
@@ -54,6 +66,9 @@ ChronoCLI/
 │   ├── InputUtils.cpp
 │   └── main.cpp
 │
+├── tests/
+│   └── test_runner.cpp
+│
 ├── docs/
 │   └── project-plan.md
 │
@@ -62,9 +77,20 @@ ChronoCLI/
 └── .gitignore
 
 
-Add this important note:
+## Event Storage
 
-```md
-## Note
+ChronoCLI stores events in a local text file named:
 
-Events are currently stored in memory. File-based event storage will be added in the next phase.
+```text
+events.txt
+
+## Running Tests
+
+ChronoCLI includes automated tests for calendar logic, date utilities, event management, and file storage.
+
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
+ctest --output-on-failure
