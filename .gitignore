@@ -2,6 +2,10 @@
 build/
 cmake-build-*/
 
+# Runtime data
+events.txt
+test_events.txt
+
 # Object files
 *.o
 *.obj
