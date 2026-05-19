@@ -1,29 +1,40 @@
 # ChronoCLI - C++ Terminal Calendar and Event Manager
 
-ChronoCLI is a modern C++ command-line application for viewing calendars, working with dates, and managing events directly from the terminal.
+![C++ CI](https://github.com/rajkaushall/CalendarProject/actions/workflows/ci.yml/badge.svg)
 
-This project is being built as a portfolio-level C++ project with clean code, modular architecture, testing, documentation, and GitHub workflow.
+ChronoCLI is a modular C++ command-line application for viewing calendars, working with dates, and managing events directly from the terminal.
 
-## Current Status
+This project started as a simple console calendar application and was upgraded into a portfolio-level C++ project with clean architecture, persistent file storage, unit testing, CMake build support, and GitHub Actions CI.
 
-```text
-Phase 7: Unit testing
+## Project Highlights
 
+- Built using modern modular C++
+- Clean separation of header and source files
+- Calendar and date utility algorithms
+- Event management system
+- File-based persistent storage
+- Automated unit tests using CTest
+- GitHub Actions CI workflow
+- Professional documentation
 
+## Features
 
-Update features:
-
-```md
-## Current Features
+### Calendar Features
 
 - Display monthly calendar
 - Display yearly calendar
-- Leap year detection
-- Find the first weekday of a month
+- Check leap year
+- Find first weekday of a month
+
+### Date Utility Features
+
 - Validate any date
 - Find weekday of any date
 - Compare two dates
 - Calculate difference between two dates
+
+### Event Management Features
+
 - Add events
 - View events by date
 - View events by month
@@ -32,26 +43,35 @@ Update features:
 - Save events to file
 - Load events from file
 - Auto-save events on exit
-- Reusable input validation
-- Continuous menu loop
-- Modular C++ structure
-- CMake build support
-- Automated unit tests
 
-Update project structure:
+### Engineering Features
 
-```md
-## Project Structure
+- Modular C++ architecture
+- CMake build system
+- Unit tests
+- CTest integration
+- GitHub Actions CI
+- Documentation
+- MIT License
 
-```text
+## Tech Stack
 
-Update project structure:
+- C++
+- CMake
+- CTest
+- Git
+- GitHub
+- GitHub Actions
+- Linux / WSL
 
-```md
 ## Project Structure
 
 ```text
 ChronoCLI/
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 │
 ├── include/
 │   ├── Calendar.hpp
@@ -70,29 +90,13 @@ ChronoCLI/
 │   └── test_runner.cpp
 │
 ├── docs/
+│   ├── architecture.md
+│   ├── features.md
+│   ├── learning-notes.md
 │   └── project-plan.md
 │
+├── screenshots/
 ├── CMakeLists.txt
 ├── README.md
+├── LICENSE
 └── .gitignore
-
-
-## Event Storage
-
-ChronoCLI stores events in a local text file named:
-
-```text
-events.txt
-
-## Running Tests
-
-ChronoCLI includes automated tests for calendar logic, date utilities, event management, and file storage.
-
-```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
-ctest --output-on-failure
-
-![C++ CI](https://github.com/rajkaushall/CalendarProject/actions/workflows/ci.yml/badge.svg)
