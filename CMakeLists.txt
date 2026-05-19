@@ -15,6 +15,7 @@ add_executable(chronocli
     src/Calendar.cpp
     src/InputUtils.cpp
     src/DateUtils.cpp
+    src/EventManager.cpp
 )
 
 target_include_directories(chronocli PRIVATE include)

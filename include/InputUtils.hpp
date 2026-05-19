@@ -8,6 +8,9 @@ namespace chronocli {
 int readInteger(const std::string& prompt);
 int readIntegerInRange(const std::string& prompt, int minValue, int maxValue);
 
+std::string readText(const std::string& prompt);
+std::string readNonEmptyText(const std::string& prompt);
+
 void waitForEnter();
 void printLine(char symbol = '-', int count = 40);
 
