@@ -1,9 +1,11 @@
 #include "Calendar.hpp"
 #include "DateUtils.hpp"
+#include "EventManager.hpp"
 #include "InputUtils.hpp"
 
 #include <iostream>
 #include <stdexcept>
+#include <vector>
 
 namespace {
 
@@ -25,6 +27,11 @@ void displayMainMenu() {
     std::cout << "5. Find weekday of any date\n";
     std::cout << "6. Compare two dates\n";
     std::cout << "7. Calculate difference between two dates\n";
+    std::cout << "8. Add event\n";
+    std::cout << "9. View events by date\n";
+    std::cout << "10. View events by month\n";
+    std::cout << "11. View all events\n";
+    std::cout << "12. Delete event\n";
     std::cout << "0. Exit\n";
 }
 
@@ -38,6 +45,32 @@ chronocli::Date readDateFromUser(const std::string& label) {
     date.year = chronocli::readIntegerInRange("Enter year (1-9999): ", 1, 9999);
 
     return date;
+}
+
+void printEvent(const chronocli::Event& event) {
+    chronocli::printLine('-', 45);
+
+    std::cout << "Event ID    : " << event.id << '\n';
+    std::cout << "Date        : "
+              << event.date.day << "/"
+              << event.date.month << "/"
+              << event.date.year << '\n';
+
+    std::cout << "Title       : " << event.title << '\n';
+    std::cout << "Description : " << event.description << '\n';
+}
+
+void printEvents(const std::vector<chronocli::Event>& events) {
+    if (events.empty()) {
+        std::cout << "No events found.\n";
+        return;
+    }
+
+    for (const chronocli::Event& event : events) {
+        printEvent(event);
+    }
+
+    chronocli::printLine('-', 45);
 }
 
 void handleMonthlyCalendar(const chronocli::Calendar& calendar) {
@@ -114,11 +147,73 @@ void handleDateDifference(const chronocli::DateUtils& dateUtils) {
     std::cout << "Difference: " << difference << " day(s).\n";
 }
 
+void handleAddEvent(chronocli::EventManager& eventManager, const chronocli::DateUtils& dateUtils) {
+    chronocli::Date date = readDateFromUser("Enter event date:");
+
+    if (!dateUtils.isValidDate(date)) {
+        std::cout << "Invalid date. Event was not added.\n";
+        return;
+    }
+
+    std::string title = chronocli::readNonEmptyText("Enter event title: ");
+    std::string description = chronocli::readText("Enter event description: ");
+
+    int eventId = eventManager.addEvent(date, title, description);
+
+    std::cout << "Event added successfully with ID: " << eventId << '\n';
+}
+
+void handleViewEventsByDate(const chronocli::EventManager& eventManager, const chronocli::DateUtils& dateUtils) {
+    chronocli::Date date = readDateFromUser("Enter date to search events:");
+
+    if (!dateUtils.isValidDate(date)) {
+        std::cout << "Invalid date.\n";
+        return;
+    }
+
+    std::vector<chronocli::Event> events = eventManager.getEventsByDate(date);
+
+    printEvents(events);
+}
+
+void handleViewEventsByMonth(const chronocli::EventManager& eventManager) {
+    int month = chronocli::readIntegerInRange("Enter month (1-12): ", 1, 12);
+    int year = chronocli::readIntegerInRange("Enter year (1-9999): ", 1, 9999);
+
+    std::vector<chronocli::Event> events = eventManager.getEventsByMonth(month, year);
+
+    printEvents(events);
+}
+
+void handleViewAllEvents(const chronocli::EventManager& eventManager) {
+    std::vector<chronocli::Event> events = eventManager.getAllEvents();
+
+    printEvents(events);
+}
+
+void handleDeleteEvent(chronocli::EventManager& eventManager) {
+    if (!eventManager.hasEvents()) {
+        std::cout << "No events available to delete.\n";
+        return;
+    }
+
+    int eventId = chronocli::readIntegerInRange("Enter event ID to delete: ", 1, 999999);
+
+    bool deleted = eventManager.deleteEvent(eventId);
+
+    if (deleted) {
+        std::cout << "Event deleted successfully.\n";
+    } else {
+        std::cout << "Event not found.\n";
+    }
+}
+
 } // anonymous namespace
 
 int main() {
     chronocli::Calendar calendar;
     chronocli::DateUtils dateUtils;
+    chronocli::EventManager eventManager;
 
     bool isRunning = true;
 
@@ -126,7 +221,7 @@ int main() {
         displayHeader();
         displayMainMenu();
 
-        int choice = chronocli::readIntegerInRange("\nEnter your choice: ", 0, 7);
+        int choice = chronocli::readIntegerInRange("\nEnter your choice: ", 0, 12);
 
         try {
             switch (choice) {
@@ -162,6 +257,31 @@ int main() {
 
                 case 7:
                     handleDateDifference(dateUtils);
+                    chronocli::waitForEnter();
+                    break;
+
+                case 8:
+                    handleAddEvent(eventManager, dateUtils);
+                    chronocli::waitForEnter();
+                    break;
+
+                case 9:
+                    handleViewEventsByDate(eventManager, dateUtils);
+                    chronocli::waitForEnter();
+                    break;
+
+                case 10:
+                    handleViewEventsByMonth(eventManager);
+                    chronocli::waitForEnter();
+                    break;
+
+                case 11:
+                    handleViewAllEvents(eventManager);
+                    chronocli::waitForEnter();
+                    break;
+
+                case 12:
+                    handleDeleteEvent(eventManager);
                     chronocli::waitForEnter();
                     break;
 

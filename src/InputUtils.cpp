@@ -42,6 +42,27 @@ int readIntegerInRange(const std::string& prompt, int minValue, int maxValue) {
     }
 }
 
+std::string readText(const std::string& prompt) {
+    std::cout << prompt;
+
+    std::string input;
+    std::getline(std::cin, input);
+
+    return input;
+}
+
+std::string readNonEmptyText(const std::string& prompt) {
+    while (true) {
+        std::string input = readText(prompt);
+
+        if (!input.empty()) {
+            return input;
+        }
+
+        std::cout << "Input cannot be empty. Please try again.\n";
+    }
+}
+
 void waitForEnter() {
     std::cout << "\nPress Enter to continue...";
     std::string ignoredInput;
