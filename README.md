@@ -94,3 +94,5 @@ cd build
 cmake ..
 cmake --build .
 ctest --output-on-failure
+
+![C++ CI](https://github.com/rajkaushall/CalendarProject/actions/workflows/ci.yml/badge.svg)
