@@ -89,6 +89,8 @@ ChronoCLI/
 
 ---
 
+
+```
 ## Getting Started
 
 ### Prerequisites
@@ -111,8 +113,6 @@ make
 
 # Run the application
 ./ChronoCLI
-```
-
 ---
 
 ## Usage
