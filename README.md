@@ -120,15 +120,16 @@ make
 ChronoCLI presents an interactive terminal menu on launch:
 
 ```
-==============================
-     ChronoCLI — Main Menu
-==============================
+============================
+    ChronoCLI — Main Menu
+============================
  1. View Monthly Calendar
  2. View Yearly Calendar
  3. Date Utilities
  4. Event Manager
  5. Exit
-==============================
+============================
+
 Enter choice:
 ```
 
