@@ -1,15 +1,11 @@
 #ifndef CHRONOCLI_DATE_UTILS_HPP
 #define CHRONOCLI_DATE_UTILS_HPP
 
+#include "Date.hpp"
+
 #include <string>
 
 namespace chronocli {
-
-struct Date {
-    int day;
-    int month;
-    int year;
-};
 
 class DateUtils {
 public:

@@ -1,7 +1,7 @@
 #ifndef CHRONOCLI_EVENT_MANAGER_HPP
 #define CHRONOCLI_EVENT_MANAGER_HPP
 
-#include "DateUtils.hpp"
+#include "Date.hpp"
 
 #include <string>
 #include <vector>

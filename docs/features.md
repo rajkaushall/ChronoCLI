@@ -1,48 +1,43 @@
 # ChronoCLI Features
 
-## Calendar Features
+ChronoCLI is a C++17 terminal calendar and event manager. Its current feature set is intentionally focused and portfolio-friendly.
 
-- Display monthly calendar
-- Display yearly calendar
-- Check leap year
-- Find first weekday of a month
+## Calendar
 
-## Date Utility Features
+- Display a monthly calendar using a Sunday-first layout.
+- Display all months in a selected year.
+- Detect leap years.
+- Calculate month lengths.
+- Find the first weekday of any valid month.
 
-- Validate any date
-- Find weekday of any date
-- Compare two dates
-- Calculate difference between two dates
+## Date Utilities
 
-## Event Management Features
+- Validate dates, including leap-day rules.
+- Find the weekday name for a date.
+- Compare two valid dates.
+- Calculate the absolute number of days between two valid dates.
 
-- Add event
-- View events by date
-- View events by month
-- View all events
-- Delete event
+## Events
 
-## File Storage Features
+- Add events with a date, title, and description.
+- View events by exact date.
+- View events by month and year.
+- View all saved events.
+- Delete events by ID.
 
-- Save events to file
-- Load events from file
-- Auto-save events on exit
-- Preserve event IDs after loading
+## Storage
 
-## CLI Features
+- Save events to `events.txt`.
+- Load saved events on launch.
+- Preserve the next event ID after loading.
+- Escape text containing pipes, slashes, and line breaks.
+- Skip malformed or invalid saved rows.
 
-- Continuous menu loop
-- Reusable input validation
-- Invalid input handling
-- Clear terminal-style output
+## Engineering
 
-## Engineering Features
-
-- Modular C++ structure
-- Header/source file separation
-- CMake build system
-- Unit tests
-- CTest integration
-- GitHub Actions CI
-- Documentation
-- MIT License
+- Modular header/source organization.
+- Shared `Date` value type.
+- Reusable input utilities.
+- CMake build configuration.
+- CTest-compatible test target.
+- GitHub Actions CI workflow.

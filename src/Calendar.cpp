@@ -7,6 +7,14 @@
 
 namespace chronocli {
 
+namespace {
+
+int convertZellerToSundayFirst(int zellerWeekday) {
+    return (zellerWeekday + 6) % 7;
+}
+
+} // namespace
+
 bool Calendar::isValidYear(int year) const {
     return year > 0;
 }
@@ -57,14 +65,11 @@ int Calendar::getFirstDayOfMonth(int month, int year) const {
 
         This formula calculates the weekday of a given date.
 
-        For this project:
-        0 = Saturday
-        1 = Sunday
-        2 = Monday
-        3 = Tuesday
-        4 = Wednesday
-        5 = Thursday
-        6 = Friday
+        Zeller returns:
+        0 = Saturday, 1 = Sunday, ..., 6 = Friday.
+
+        ChronoCLI exposes weekdays as:
+        0 = Sunday, 1 = Monday, ..., 6 = Saturday.
     */
 
     int adjustedMonth = month;
@@ -79,7 +84,7 @@ int Calendar::getFirstDayOfMonth(int month, int year) const {
     int yearOfCentury = adjustedYear % 100;
     int zeroBasedCentury = adjustedYear / 100;
 
-    int weekday = (
+    int zellerWeekday = (
         day
         + (13 * (adjustedMonth + 1)) / 5
         + yearOfCentury
@@ -88,7 +93,7 @@ int Calendar::getFirstDayOfMonth(int month, int year) const {
         + 5 * zeroBasedCentury
     ) % 7;
 
-    return weekday;
+    return convertZellerToSundayFirst(zellerWeekday);
 }
 
 std::string Calendar::getMonthName(int month) const {
@@ -107,7 +112,7 @@ std::string Calendar::getMonthName(int month) const {
 
 std::string Calendar::getWeekdayName(int weekday) const {
     static const std::array<std::string, 7> weekdayNames = {
-        "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
     };
 
     if (weekday < 0 || weekday > 6) {
@@ -123,13 +128,13 @@ void Calendar::printMonth(int month, int year) const {
 
     std::cout << "\n========== " << getMonthName(month) << " " << year << " ==========\n\n";
 
-    std::cout << std::setw(4) << "Sat"
-              << std::setw(4) << "Sun"
+    std::cout << std::setw(4) << "Sun"
               << std::setw(4) << "Mon"
               << std::setw(4) << "Tue"
               << std::setw(4) << "Wed"
               << std::setw(4) << "Thu"
               << std::setw(4) << "Fri"
+              << std::setw(4) << "Sat"
               << '\n';
 
     for (int i = 0; i < firstDay; i++) {

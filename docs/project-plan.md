@@ -1,63 +1,35 @@
 # ChronoCLI Project Plan
 
-## Project Vision
+## Objective
 
-ChronoCLI is a C++ terminal-based calendar and event management system designed to demonstrate clean C++ programming, date algorithms, modular architecture, file handling, testing, and professional GitHub documentation.
+ChronoCLI is a portfolio-ready C++17 terminal application for calendar display, date calculations, event management, and local file persistence.
 
-## Main Goal
+## Completed Scope
 
-To convert a simple console calendar program into a portfolio-level C++ project.
+- Modular C++ project structure.
+- Monthly and yearly calendar display.
+- Sunday-first weekday layout.
+- Leap-year and month-length logic.
+- Date validation, comparison, weekday lookup, and day-difference calculation.
+- Event add, view, delete, save, and load workflows.
+- Escaped file storage for event text.
+- Unit-style test runner with CTest integration.
+- GitHub Actions CI configuration.
+- Professional README with generated screenshots.
 
-## Target Users
+## Future Enhancements
 
-- Students
-- Developers
-- Terminal users
-- Beginners learning C++ date-based logic
+- Search events by title or description.
+- Export events to CSV or JSON.
+- Support recurring events.
+- Add optional reminder metadata.
+- Introduce SQLite storage as an optional backend.
+- Improve terminal presentation with a richer text UI.
 
-## Core Features
+## Non-Goals For Current Version
 
-### Calendar Features
-
-- Monthly calendar display
-- Yearly calendar display
-- Leap year detection
-- Day-of-week calculation
-
-### Date Features
-
-- Date validation
-- Difference between two dates
-- Compare two dates
-
-### Event Features
-
-- Add event
-- View event
-- Delete event
-- Search event
-- Save/load events from file
-
-## Engineering Features
-
-- Modular code structure
-- Header/source separation
-- CMake build system
-- Unit testing
-- GitHub Actions
-- Clean README
-- Screenshots
-- Versioned releases
-
-## Learning Goals
-
-By completing this project, I will learn:
-
-- Modern C++ project structure
-- Object-oriented design
-- Date algorithms
-- File handling
-- Testing
-- CMake
-- Git and GitHub workflow
-- Documentation best practices
+- User accounts.
+- Web dashboard.
+- REST API.
+- Cloud sync.
+- Notification scheduling.

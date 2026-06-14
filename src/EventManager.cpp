@@ -1,4 +1,5 @@
 #include "EventManager.hpp"
+#include "DateUtils.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -219,6 +220,12 @@ bool EventManager::parseEventLine(const std::string& line, Event& event) const {
         event.date.year = std::stoi(fields[3]);
         event.title = unescapeText(fields[4]);
         event.description = unescapeText(fields[5]);
+
+        DateUtils dateUtils;
+
+        if (event.id <= 0 || !dateUtils.isValidDate(event.date)) {
+            return false;
+        }
     }
     catch (...) {
         return false;

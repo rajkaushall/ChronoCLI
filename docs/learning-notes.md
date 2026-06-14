@@ -1,43 +1,29 @@
 # Learning Notes
 
-This project was built to practice and demonstrate core C++ and software engineering concepts.
+ChronoCLI was built to practice core C++ and software engineering concepts in a small but complete terminal application.
 
 ## C++ Concepts Practiced
 
-- Classes and objects
-- Structs
-- Header and source file separation
-- Namespaces
-- Vectors
-- Strings
-- File handling
-- Exception handling
-- Const correctness
-- Basic serialization and deserialization
+- Classes and structs.
+- Header/source separation.
+- Namespaces.
+- Vectors and strings.
+- File input/output.
+- Exception handling.
+- Const-correct member functions.
+- Simple serialization and deserialization.
 
 ## Software Engineering Concepts Practiced
 
-- Modular design
-- Separation of concerns
-- Input validation
-- Error handling
-- Unit testing
-- Build automation
-- Continuous Integration
-- Documentation
-- Git workflow
+- Modular design.
+- Separation of concerns.
+- Input validation.
+- Error handling.
+- Testable core logic.
+- Build automation with CMake.
+- Continuous integration with GitHub Actions.
+- Professional project documentation.
 
-## Tools Used
+## Key Takeaway
 
-- C++
-- CMake
-- Git
-- GitHub
-- GitHub Actions
-- CTest
-- VS Code
-- Linux terminal / WSL
-
-## Key Learning Outcome
-
-ChronoCLI started as a simple console calendar program and was gradually upgraded into a structured C++ portfolio project with testing, persistent storage, CI, and documentation.
+The project starts from a simple console idea and grows into a maintainable C++ application with tests, persistence, CI, screenshots, and documentation suitable for a developer portfolio.

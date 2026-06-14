@@ -5,6 +5,14 @@
 
 namespace chronocli {
 
+namespace {
+
+int convertZellerToSundayFirst(int zellerWeekday) {
+    return (zellerWeekday + 6) % 7;
+}
+
+} // namespace
+
 bool DateUtils::isLeapYear(int year) const {
     if (year <= 0) {
         return false;
@@ -51,14 +59,11 @@ int DateUtils::getDayOfWeek(const Date& date) const {
     /*
         Zeller's Congruence
 
-        For this project:
-        0 = Saturday
-        1 = Sunday
-        2 = Monday
-        3 = Tuesday
-        4 = Wednesday
-        5 = Thursday
-        6 = Friday
+        Zeller returns:
+        0 = Saturday, 1 = Sunday, ..., 6 = Friday.
+
+        ChronoCLI exposes weekdays as:
+        0 = Sunday, 1 = Monday, ..., 6 = Saturday.
     */
 
     int day = date.day;
@@ -73,7 +78,7 @@ int DateUtils::getDayOfWeek(const Date& date) const {
     int yearOfCentury = year % 100;
     int zeroBasedCentury = year / 100;
 
-    int weekday = (
+    int zellerWeekday = (
         day
         + (13 * (month + 1)) / 5
         + yearOfCentury
@@ -82,12 +87,12 @@ int DateUtils::getDayOfWeek(const Date& date) const {
         + 5 * zeroBasedCentury
     ) % 7;
 
-    return weekday;
+    return convertZellerToSundayFirst(zellerWeekday);
 }
 
 std::string DateUtils::getDayOfWeekName(const Date& date) const {
     static const std::array<std::string, 7> weekdayNames = {
-        "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
     };
 
     int weekday = getDayOfWeek(date);
