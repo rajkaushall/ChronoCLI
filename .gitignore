@@ -1,0 +1,30 @@
+# Build directories
+build/
+cmake-build-*/
+
+# Runtime data
+events.txt
+test_events.txt
+
+# Object files
+*.o
+*.obj
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
