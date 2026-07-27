@@ -15,42 +15,28 @@
   <img src="https://img.shields.io/badge/Build-CMake-064F8C.svg" alt="CMake">
 </p>
 
-ChronoCLI is a terminal-based calendar and event management application built with modern C++17. It helps users display monthly and yearly calendars, validate and compare dates, calculate day differences, manage dated events, and store event data locally in a simple file format.
+ChronoCLI is a terminal-based calendar and event manager built with modern C++17. It displays monthly and yearly calendars, marks dates with events, shows a Today dashboard, and manages local events with automatic safe saving.
 
-The project is designed as a portfolio-ready C++ codebase: modular headers and source files, clean input handling, file persistence, unit-style tests, CMake configuration, and GitHub Actions CI.
+The project is designed as a portfolio-ready C++ codebase: modular headers and source files, reusable terminal UI helpers, strict input handling, atomic file persistence, focused tests, CMake configuration, and CI support.
 
-## Screenshots
+## Screenshot
 
-### Main Menu
-
-![ChronoCLI main menu](screenshots/main-menu.png)
-
-### Monthly Calendar
-
-![ChronoCLI monthly calendar](screenshots/monthly-calendar.png)
-
-### Event Workflow
-
-![ChronoCLI event workflow](screenshots/event-workflow.png)
-
-### Test Results
-
-![ChronoCLI test results](screenshots/test-results.png)
+![ChronoCLI main menu](screenshots/chronocli-main-menu.png)
 
 ## Features
 
-- Display monthly calendars with a Sunday-first layout.
-- Display a full year of calendars.
-- Check leap years and month lengths.
+- Display a bordered monthly calendar.
+- Enter month and year together for the monthly calendar, for example `7 2026`.
+- Display a full-year calendar as a bordered 4-month matrix.
+- Highlight today with brackets and mark dates containing events with `*`.
+- Show Today, Events today, and Upcoming counts on the home screen.
 - Find the weekday for any valid date.
-- Compare two dates.
-- Calculate the absolute difference between two dates.
-- Add, view, and delete events.
-- View events by exact date, by month, or as a full list.
-- Save events to `events.txt` and reload them on the next run.
-- Preserve event IDs after loading saved data.
-- Safely escape event text containing pipes, slashes, and line breaks.
-- Skip malformed saved event rows during load.
+- Add, edit, delete, search, and list upcoming events.
+- Confirm deletion before removing an event.
+- Sort events chronologically.
+- Automatically save after adding, editing, or deleting events.
+- Save events safely using a temporary file and backup.
+- Strictly reject malformed saved rows, invalid dates, duplicate IDs, and blank titles.
 
 ## Tech Stack
 
@@ -58,18 +44,15 @@ The project is designed as a portfolio-ready C++ codebase: modular headers and s
 | --- | --- |
 | Language | C++17 |
 | Build system | CMake |
-| Tests | Custom C++ test runner + CTest integration |
-| CI | GitHub Actions |
+| Tests | Custom C++ test runner + CTest |
 | Storage | Local text file persistence |
+| UI | ANSI-coloured terminal interface |
 | Platform | Windows, Linux, WSL, macOS |
 
 ## Project Structure
 
 ```text
 ChronoCLI/
-|-- .github/
-|   `-- workflows/
-|       `-- ci.yml
 |-- docs/
 |   |-- architecture.md
 |   |-- features.md
@@ -80,17 +63,16 @@ ChronoCLI/
 |   |-- Date.hpp
 |   |-- DateUtils.hpp
 |   |-- EventManager.hpp
-|   `-- InputUtils.hpp
+|   |-- InputUtils.hpp
+|   `-- TerminalUI.hpp
 |-- screenshots/
-|   |-- event-workflow.png
-|   |-- main-menu.png
-|   |-- monthly-calendar.png
-|   `-- test-results.png
+|   `-- chronocli-main-menu.png
 |-- src/
 |   |-- Calendar.cpp
 |   |-- DateUtils.cpp
 |   |-- EventManager.cpp
 |   |-- InputUtils.cpp
+|   |-- TerminalUI.cpp
 |   `-- main.cpp
 |-- tests/
 |   `-- test_runner.cpp
@@ -101,16 +83,15 @@ ChronoCLI/
 
 ## Architecture
 
-ChronoCLI keeps the command-line interface separate from core behavior:
+ChronoCLI keeps the terminal interface separate from core behavior:
 
-- `main.cpp` owns the interactive menu and user workflow.
-- `Calendar` handles leap years, month lengths, weekday positioning, and terminal calendar output.
+- `main.cpp` owns the interactive workflow and menu routing.
+- `TerminalUI` renders the bordered home screen, status row, menu grid, messages, and event tables.
+- `Calendar` renders monthly and yearly calendars while delegating date math to `DateUtils`.
 - `DateUtils` validates dates, calculates weekdays, compares dates, and computes day differences.
-- `EventManager` stores events in memory and saves/loads them from disk.
-- `InputUtils` centralizes reusable terminal input helpers.
+- `EventManager` stores events in memory, validates event data, sorts events, searches events, and saves/loads from disk.
+- `InputUtils` centralizes reusable input helpers, including EOF-safe reads and whitespace trimming.
 - `Date` is a small shared value type used across date and event modules.
-
-This structure keeps the code easy to test and makes future improvements, such as CSV export or recurring events, easier to add without rewriting the whole project.
 
 ## Build And Run
 
@@ -121,80 +102,80 @@ Install:
 - A C++17 compiler such as `g++`, `clang++`, or MSVC.
 - CMake 3.16 or newer.
 
-### Build With CMake
+### Windows / VS Code
+
+Open the project folder in VS Code, then run:
+
+```powershell
+cmake -S . -B build
+cmake --build build
+.\build\chronocli.exe
+```
+
+### Linux / macOS / WSL
 
 ```bash
 cmake -S . -B build
 cmake --build build
-```
-
-Run the app:
-
-```bash
 ./build/chronocli
-```
-
-On Windows, the executable is usually:
-
-```powershell
-.\build\chronocli.exe
 ```
 
 ### Build Directly With g++
 
-If CMake is not available, compile directly:
+If CMake is not available:
 
 ```powershell
-g++ -std=c++17 -Wall -Wextra -pedantic -Iinclude src\main.cpp src\Calendar.cpp src\InputUtils.cpp src\DateUtils.cpp src\EventManager.cpp -o build\chronocli.exe
-```
-
-Then run:
-
-```powershell
-.\build\chronocli.exe
+g++ -std=c++17 -Wall -Wextra -pedantic -Iinclude src\main.cpp src\Calendar.cpp src\InputUtils.cpp src\DateUtils.cpp src\EventManager.cpp src\TerminalUI.cpp -o build\chronocli.exe
 ```
 
 ## Usage
 
-When the app starts, it opens an interactive menu:
+When the app starts, it opens a bordered interactive menu:
 
 ```text
-=============================================
-              ChronoCLI
-     C++ Terminal Calendar Manager
-=============================================
-
-Main Menu
----------------------------------------------
-1. Display monthly calendar
-2. Display yearly calendar
-3. Check leap year
-4. Find first weekday of a month
-5. Find weekday of any date
-6. Compare two dates
-7. Calculate difference between two dates
-8. Add event
-9. View events by date
-10. View events by month
-11. View all events
-12. Delete event
-13. Save events now
-0. Exit
++------------------------------------------------------------------+
+|                            CHRONOCLI                             |
+|                 Your terminal calendar manager                   |
++------------------------------------------------------------------+
+|   Today: Tuesday, 28/07/2026   Events today: 0   Upcoming: 0     |
++------------------------------------------------------------------+
+|                                                                  |
+|                        M A I N   M E N U                         |
+|                                                                  |
++--------------------------------+---------------------------------+
+|CALENDAR                        |EVENTS                           |
+|  1. View month                 |  4. Add event                   |
+|  2. View year                  |  5. Upcoming events             |
+|  3. Go to today                |  6. Search events               |
+|                                |  7. Edit event                  |
+|                                |  8. Delete event                |
++--------------------------------+---------------------------------+
+|SYSTEM                          |                                 |
+|  9. Find weekday               |  0. Exit                        |
++--------------------------------+---------------------------------+
 ```
 
-Example monthly calendar:
+For View Month, enter month and year in one line:
 
 ```text
-========== March 2025 ==========
-
- Sun Mon Tue Wed Thu Fri Sat
-                           1
-   2   3   4   5   6   7   8
-   9  10  11  12  13  14  15
-  16  17  18  19  20  21  22
-  23  24  25  26  27  28  29
-  30  31
+Enter month and year (MM YYYY): 7 2026
 ```
+
+## Event Storage
+
+Events are saved automatically after add, edit, and delete operations. The application stores data beside the executable:
+
+```text
+build/data/events.txt
+```
+
+Each row stores:
+
+```text
+id|day|month|year|title|description
+```
+
+The storage layer escapes special characters in event text, writes through a temporary file, preserves a backup, rejects malformed numeric fields, skips invalid rows, and prevents duplicate loaded IDs.
 
 ## Testing
 
@@ -206,10 +187,9 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-Or compile and run the test runner directly:
+Or run the test executable directly on Windows:
 
 ```powershell
-g++ -std=c++17 -Wall -Wextra -pedantic -Iinclude tests\test_runner.cpp src\Calendar.cpp src\InputUtils.cpp src\DateUtils.cpp src\EventManager.cpp -o build\chronocli_tests.exe
 .\build\chronocli_tests.exe
 ```
 
@@ -218,30 +198,18 @@ The test runner covers:
 - Leap-year and century-year rules.
 - Month lengths and Sunday-first weekday output.
 - Date validation, comparison, and day differences.
-- Event creation, filtering, deletion, and persistence.
+- Year calendar matrix rendering.
+- Event creation, validation, sorting, updating, searching, deletion, and persistence.
 - Escaped event text.
-- Invalid saved rows and restored event IDs after load.
-
-## Event Storage
-
-Events are saved to `events.txt` in the working directory. Each row stores:
-
-```text
-id|day|month|year|title|description
-```
-
-The storage layer escapes special characters in event text, including `|`, `\`, newlines, and carriage returns. On load, malformed rows and invalid dates are skipped while valid rows are preserved.
+- Invalid saved rows, duplicate IDs, restored event IDs, and EOF input handling.
 
 ## Roadmap
 
-Planned future improvements:
-
-- Event search by title or description.
-- Export events to CSV or JSON.
+- CSV and JSON export.
 - Recurring events.
-- Optional reminders.
+- Reminder metadata.
 - SQLite-backed storage.
-- A small terminal UI refresh.
+- Real command-line subcommands such as `chronocli today` and `chronocli search`.
 
 ## Author
 

@@ -21,12 +21,16 @@ public:
 
     int addEvent(const Date& date, const std::string& title, const std::string& description);
 
+    bool updateEvent(int eventId, const Date& date, const std::string& title, const std::string& description);
     bool deleteEvent(int eventId);
 
     std::vector<Event> getEventsByDate(const Date& date) const;
     std::vector<Event> getEventsByMonth(int month, int year) const;
+    std::vector<Event> getUpcomingEvents(const Date& fromDate) const;
+    std::vector<Event> searchEvents(const std::string& keyword) const;
     std::vector<Event> getAllEvents() const;
 
+    bool hasEventOnDate(const Date& date) const;
     bool hasEvents() const;
 
     bool saveEventsToFile(const std::string& filePath) const;

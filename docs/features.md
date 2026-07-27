@@ -5,7 +5,9 @@ ChronoCLI is a C++17 terminal calendar and event manager. Its current feature se
 ## Calendar
 
 - Display a monthly calendar using a Sunday-first layout.
-- Display all months in a selected year.
+- Display a bordered monthly calendar.
+- Display all months in a selected year as a 4-month matrix.
+- Mark today and event dates in calendar output.
 - Detect leap years.
 - Calculate month lengths.
 - Find the first weekday of any valid month.
@@ -20,24 +22,26 @@ ChronoCLI is a C++17 terminal calendar and event manager. Its current feature se
 ## Events
 
 - Add events with a date, title, and description.
-- View events by exact date.
-- View events by month and year.
-- View all saved events.
+- Edit existing events.
+- Search saved events.
+- View upcoming events.
 - Delete events by ID.
+- Sort event output chronologically.
 
 ## Storage
 
-- Save events to `events.txt`.
+- Save events automatically after add, edit, and delete operations.
 - Load saved events on launch.
 - Preserve the next event ID after loading.
 - Escape text containing pipes, slashes, and line breaks.
-- Skip malformed or invalid saved rows.
+- Skip malformed rows, invalid dates, duplicate IDs, and blank titles.
 
 ## Engineering
 
 - Modular header/source organization.
 - Shared `Date` value type.
 - Reusable input utilities.
+- Reusable terminal UI formatting.
 - CMake build configuration.
 - CTest-compatible test target.
 - GitHub Actions CI workflow.

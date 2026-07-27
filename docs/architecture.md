@@ -7,16 +7,18 @@ main.cpp
 |-- Calendar
 |-- DateUtils
 |-- EventManager
-`-- InputUtils
+|-- InputUtils
+`-- TerminalUI
 ```
 
 ## Modules
 
 - `main.cpp` coordinates the menu, prompts, and user-facing workflow.
-- `Calendar` owns month/year calendar display and calendar-specific validation.
+- `TerminalUI` owns the bordered terminal dashboard, menu, messages, and event table formatting.
+- `Calendar` owns bordered month/year calendar display and calendar-specific validation.
 - `DateUtils` owns date validation, weekday lookup, date comparison, and day-difference calculations.
-- `EventManager` owns event storage in memory and file persistence.
-- `InputUtils` owns reusable integer/text input helpers for the CLI.
+- `EventManager` owns event storage in memory, event validation, sorting, searching, and file persistence.
+- `InputUtils` owns reusable EOF-safe integer/text input helpers for the CLI.
 - `Date` is a shared value type used by date and event modules.
 
 ## Data Flow
@@ -25,7 +27,7 @@ main.cpp
 2. `main.cpp` reads validated input through `InputUtils`.
 3. The selected module performs the requested operation.
 4. Results are printed to the terminal.
-5. Event data is saved to `events.txt` on demand or when exiting.
+5. Event data is saved automatically after add, edit, and delete operations.
 
 ## Storage Format
 
@@ -35,4 +37,4 @@ Events are stored as escaped pipe-separated rows:
 id|day|month|year|title|description
 ```
 
-Malformed rows, invalid IDs, and invalid dates are ignored during load.
+Malformed rows, invalid IDs, duplicate IDs, blank titles, and invalid dates are ignored during load.

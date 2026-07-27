@@ -1,11 +1,14 @@
 #include "Calendar.hpp"
 #include "DateUtils.hpp"
 #include "EventManager.hpp"
+#include "InputUtils.hpp"
 
 #include <cstdio>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -51,6 +54,33 @@ void testCalendarLogic() {
     check(calendar.getWeekdayName(6) == "Saturday", "Weekday 6 should be Saturday");
     check(calendar.getFirstDayOfMonth(3, 2025) == 6, "March 2025 should start on Saturday");
     check(calendar.getFirstDayOfMonth(6, 2026) == 1, "June 2026 should start on Monday");
+
+    std::ostringstream yearlyOutput;
+    std::streambuf* originalOutput = std::cout.rdbuf(yearlyOutput.rdbuf());
+    calendar.printYear(2025);
+    std::cout.rdbuf(originalOutput);
+
+    std::string printedYear = yearlyOutput.str();
+    std::size_t januaryPosition = printedYear.find("January 2025");
+    std::size_t februaryPosition = printedYear.find("February 2025");
+    std::size_t marchPosition = printedYear.find("March 2025");
+    std::size_t aprilPosition = printedYear.find("April 2025");
+
+    check(
+        januaryPosition != std::string::npos
+            && februaryPosition != std::string::npos
+            && marchPosition != std::string::npos
+            && aprilPosition != std::string::npos
+            && januaryPosition < februaryPosition
+            && februaryPosition < marchPosition
+            && marchPosition < aprilPosition,
+        "Year view should print January through April in order"
+    );
+
+    check(
+        aprilPosition != std::string::npos && aprilPosition > marchPosition,
+        "Year view should include April in the first matrix row"
+    );
 
     checkThrowsInvalidArgument(
         [&calendar]() { calendar.getDaysInMonth(13, 2026); },
@@ -113,8 +143,50 @@ void testEventManagerLogic() {
     check(!eventManager.hasEvents(), "Event manager should be empty after delete");
 }
 
+void testEventValidationAndSorting() {
+    chronocli::EventManager eventManager;
+
+    checkThrowsInvalidArgument(
+        [&eventManager]() { eventManager.addEvent({31, 2, 2026}, "Invalid", "Bad date"); },
+        "Event manager should reject invalid dates"
+    );
+
+    checkThrowsInvalidArgument(
+        [&eventManager]() { eventManager.addEvent({1, 3, 2026}, "   ", "Blank title"); },
+        "Event manager should reject whitespace-only titles"
+    );
+
+    int laterId = eventManager.addEvent({25, 12, 2026}, "Later", "Second chronologically");
+    int earlierId = eventManager.addEvent({10, 1, 2026}, "Earlier", "First chronologically");
+
+    std::vector<chronocli::Event> events = eventManager.getAllEvents();
+
+    check(events.size() == 2, "Sorted event test should have two events");
+    check(events[0].id == earlierId, "Events should sort by date before ID");
+    check(events[1].id == laterId, "Later event should appear after earlier event");
+}
+
+void testEventUpdateSearchAndUpcoming() {
+    chronocli::EventManager eventManager;
+
+    int firstId = eventManager.addEvent({10, 1, 2026}, "Interview prep", "Revise C++");
+    eventManager.addEvent({15, 1, 2026}, "College deadline", "Submit report");
+    eventManager.addEvent({1, 1, 2025}, "Past event", "Already done");
+
+    check(eventManager.updateEvent(firstId, {11, 1, 2026}, "Placement interview", "Revise DSA"), "Existing event should update");
+    check(!eventManager.updateEvent(999, {11, 1, 2026}, "Missing", "No event"), "Missing event update should fail");
+
+    std::vector<chronocli::Event> searchResults = eventManager.searchEvents("interview");
+    check(searchResults.size() == 1, "Search should match updated title");
+    check(searchResults[0].id == firstId, "Search should return the updated event");
+
+    std::vector<chronocli::Event> upcomingEvents = eventManager.getUpcomingEvents({10, 1, 2026});
+    check(upcomingEvents.size() == 2, "Upcoming events should exclude past events");
+    check(upcomingEvents[0].id == firstId, "Upcoming events should be sorted chronologically");
+}
+
 void testEventFileStorage() {
-    const std::string filePath = "test_events.txt";
+    const std::string filePath = "test_data/test_events.txt";
 
     chronocli::EventManager eventManager;
     chronocli::Date eventDate{20, 5, 2026};
@@ -138,6 +210,7 @@ void testEventFileStorage() {
     check(loadedEventManager.addEvent({21, 5, 2026}, "Next event", "Check restored ID") == 2, "Next ID should be restored after load");
 
     std::remove(filePath.c_str());
+    std::filesystem::remove_all("test_data");
 }
 
 void testEscapedEventFileStorage() {
@@ -176,7 +249,11 @@ void testInvalidEventFileRows() {
     outputFile << "not a valid event line\n";
     outputFile << "0|1|1|2026|Bad ID|Should be skipped\n";
     outputFile << "2|31|2|2026|Bad date|Should be skipped\n";
+    outputFile << "5abc|20|5|2026|Bad ID text|Should be skipped\n";
+    outputFile << "6|20x|5|2026|Bad day text|Should be skipped\n";
+    outputFile << "7|20|5|2026|   |Blank title should be skipped\n";
     outputFile << "5|20|5|2026|Valid event|Should load\n";
+    outputFile << "5|21|5|2026|Duplicate ID|Should be skipped\n";
     outputFile.close();
 
     chronocli::EventManager eventManager;
@@ -197,15 +274,39 @@ void testInvalidEventFileRows() {
     std::remove(filePath.c_str());
 }
 
+void testInputHelpers() {
+    check(chronocli::trim("  ChronoCLI  ") == "ChronoCLI", "Trim should remove surrounding spaces");
+    check(chronocli::trim(" \t\r\n ") == "", "Trim should treat whitespace-only input as empty");
+
+    std::istringstream emptyInput;
+    std::streambuf* originalInput = std::cin.rdbuf(emptyInput.rdbuf());
+
+    try {
+        chronocli::readInteger("Number: ");
+        check(false, "readInteger should throw on EOF");
+    }
+    catch (const std::runtime_error&) {
+        check(true, "readInteger should throw on EOF");
+    }
+    catch (...) {
+        check(false, "readInteger should throw runtime_error on EOF");
+    }
+
+    std::cin.rdbuf(originalInput);
+}
+
 int main() {
     std::cout << "Running ChronoCLI tests...\n\n";
 
     testCalendarLogic();
     testDateUtilsLogic();
     testEventManagerLogic();
+    testEventValidationAndSorting();
+    testEventUpdateSearchAndUpcoming();
     testEventFileStorage();
     testEscapedEventFileStorage();
     testInvalidEventFileRows();
+    testInputHelpers();
 
     std::cout << "\nTest Summary\n";
     std::cout << "------------\n";

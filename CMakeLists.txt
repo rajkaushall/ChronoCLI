@@ -17,9 +17,24 @@ add_library(chronocli_core
     src/InputUtils.cpp
     src/DateUtils.cpp
     src/EventManager.cpp
+    src/TerminalUI.cpp
 )
 
 target_include_directories(chronocli_core PUBLIC include)
+
+if(MSVC)
+    target_compile_options(chronocli_core PRIVATE /W4)
+else()
+    target_compile_options(
+        chronocli_core
+        PRIVATE
+        -Wall
+        -Wextra
+        -Wpedantic
+        -Wconversion
+        -Wshadow
+    )
+endif()
 
 add_executable(chronocli
     src/main.cpp

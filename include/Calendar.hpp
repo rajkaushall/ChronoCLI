@@ -1,7 +1,10 @@
 #ifndef CHRONOCLI_CALENDAR_HPP
 #define CHRONOCLI_CALENDAR_HPP
 
+#include "Date.hpp"
+
 #include <string>
+#include <vector>
 
 namespace chronocli {
 
@@ -17,7 +20,7 @@ public:
     std::string getMonthName(int month) const;
     std::string getWeekdayName(int weekday) const;
 
-    void printMonth(int month, int year) const;
+    void printMonth(int month, int year, const std::vector<int>& eventDays = {}, const Date* today = nullptr) const;
     void printYear(int year) const;
 };
 

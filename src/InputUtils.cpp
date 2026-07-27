@@ -1,17 +1,38 @@
 #include "InputUtils.hpp"
 
+#include <cctype>
 #include <iostream>
+#include <stdexcept>
 #include <sstream>
 #include <string>
 
 namespace chronocli {
+
+std::string trim(const std::string& text) {
+    std::size_t start = 0;
+
+    while (start < text.size() && std::isspace(static_cast<unsigned char>(text[start]))) {
+        start++;
+    }
+
+    std::size_t end = text.size();
+
+    while (end > start && std::isspace(static_cast<unsigned char>(text[end - 1]))) {
+        end--;
+    }
+
+    return text.substr(start, end - start);
+}
 
 int readInteger(const std::string& prompt) {
     while (true) {
         std::cout << prompt;
 
         std::string input;
-        std::getline(std::cin, input);
+
+        if (!std::getline(std::cin, input)) {
+            throw std::runtime_error("Input stream closed.");
+        }
 
         std::stringstream stream(input);
 
@@ -46,7 +67,10 @@ std::string readText(const std::string& prompt) {
     std::cout << prompt;
 
     std::string input;
-    std::getline(std::cin, input);
+
+    if (!std::getline(std::cin, input)) {
+        throw std::runtime_error("Input stream closed.");
+    }
 
     return input;
 }
@@ -55,7 +79,7 @@ std::string readNonEmptyText(const std::string& prompt) {
     while (true) {
         std::string input = readText(prompt);
 
-        if (!input.empty()) {
+        if (!trim(input).empty()) {
             return input;
         }
 
@@ -66,7 +90,10 @@ std::string readNonEmptyText(const std::string& prompt) {
 void waitForEnter() {
     std::cout << "\nPress Enter to continue...";
     std::string ignoredInput;
-    std::getline(std::cin, ignoredInput);
+
+    if (!std::getline(std::cin, ignoredInput)) {
+        throw std::runtime_error("Input stream closed.");
+    }
 }
 
 void printLine(char symbol, int count) {

@@ -10,6 +10,8 @@ namespace chronocli {
 class DateUtils {
 public:
     bool isValidDate(const Date& date) const;
+    bool isLeapYear(int year) const;
+    int getDaysInMonth(int month, int year) const;
 
     int getDayOfWeek(const Date& date) const;
     std::string getDayOfWeekName(const Date& date) const;
@@ -19,8 +21,6 @@ public:
 
 private:
     long long getSerialDayNumber(const Date& date) const;
-    bool isLeapYear(int year) const;
-    int getDaysInMonth(int month, int year) const;
 };
 
 } // namespace chronocli

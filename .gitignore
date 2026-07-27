@@ -4,7 +4,9 @@ cmake-build-*/
 
 # Runtime data
 events.txt
+data/
 test_events.txt
+*.backup
 
 # Object files
 *.o

@@ -5,6 +5,8 @@
 
 namespace chronocli {
 
+std::string trim(const std::string& text);
+
 int readInteger(const std::string& prompt);
 int readIntegerInRange(const std::string& prompt, int minValue, int maxValue);
 
